@@ -6,14 +6,13 @@ const seatPositions = [
   [100, 180], [160, 180], [220, 180], [280, 180], [340, 180], [400, 180], [460, 180]
 ];
 
-function createSeat(num, isTaken, tooltipText = "") {
+function createSeat(num, isTaken) {
   const seat = document.createElement(isTaken ? "div" : "a");
   seat.textContent = num;
   seat.className = `seat ${isTaken ? "opptatt" : "ledig"}`;
   seat.style.top = seatPositions[num - 1][1] + "px";
   seat.style.left = seatPositions[num - 1][0] + "px";
   seat.style.position = "absolute";
-  seat.title = tooltipText;
 
   if (!isTaken) {
     seat.href = formBaseUrl + encodeURIComponent("Plass " + num);
@@ -39,16 +38,26 @@ fetch(sheetUrl)
       if (match) {
         const seatNum = parseInt(match[0], 10);
         if (!isNaN(seatNum)) {
-          const tooltip = `Booket av ${navn || "ukjent"}\n${timestamp || ""}`;
-          takenSeats.set(seatNum, tooltip);
+          takenSeats.set(seatNum, {
+            navn: navn || "Ukjent",
+            tidspunkt: timestamp || ""
+          });
         }
       }
     }
 
     const container = document.getElementById("seats");
+    const list = document.getElementById("bookedItems");
+
     for (let i = 1; i <= 14; i++) {
-      const tooltip = takenSeats.get(i) || "";
+      const booking = takenSeats.get(i);
       const isTaken = takenSeats.has(i);
-      container.appendChild(createSeat(i, isTaken, tooltip));
+      container.appendChild(createSeat(i, isTaken));
+
+      if (isTaken) {
+        const li = document.createElement("li");
+        li.textContent = `Plass ${i} – ${booking.navn} – ${booking.tidspunkt}`;
+        list.appendChild(li);
+      }
     }
   });
