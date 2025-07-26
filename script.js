@@ -1,63 +1,76 @@
-const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeUwKg5fH5LebqauOoRgm88KjTGLKXe1XjOkApEbwXYYvEkRw/viewform?usp=pp_url&entry.1234567890=";
-const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWeVLX-_EP_glVBrHjj4FtpaSe0jhZyv06OQPruEiso18V_pIEON82yHUX2S1WE1RckemMIOFx9a-a/pub?output=csv";
-
-const seatPositions = [
-  [100, 100], [160, 100], [220, 100], [280, 100], [340, 100], [400, 100], [460, 100],
-  [100, 180], [160, 180], [220, 180], [280, 180], [340, 180], [400, 180], [460, 180]
-];
-
-function createSeat(num, isTaken) {
-  const seat = document.createElement(isTaken ? "div" : "a");
-  seat.textContent = num;
-  seat.className = `seat ${isTaken ? "opptatt" : "ledig"}`;
-  seat.style.top = seatPositions[num - 1][1] + "px";
-  seat.style.left = seatPositions[num - 1][0] + "px";
-  seat.style.position = "absolute";
-
-  if (!isTaken) {
-    seat.href = formBaseUrl + encodeURIComponent("Plass " + num);
-    seat.target = "_blank";
-  }
-
-  return seat;
+body {
+  font-family: sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
-fetch(sheetUrl)
-  .then(res => res.text())
-  .then(csv => {
-    const lines = csv.trim().split("\n");
-    const takenSeats = new Map();
+#bookingWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin: 20px;
+}
 
-    for (let i = 1; i < lines.length; i++) {
-      const columns = lines[i].split(",");
-      const timestamp = columns[0]?.trim();
-      const plassRaw = columns[1]?.trim();
-      const navn = columns[2]?.trim();
+#seats {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+}
 
-      const match = plassRaw.match(/\d+/);
-      if (match) {
-        const seatNum = parseInt(match[0], 10);
-        if (!isNaN(seatNum)) {
-          takenSeats.set(seatNum, {
-            navn: navn || "Ukjent",
-            tidspunkt: timestamp || ""
-          });
-        }
-      }
-    }
+#seats img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 
-    const container = document.getElementById("seats");
-    const list = document.getElementById("bookedItems");
+.seat {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 32px;
+  font-weight: bold;
+  color: white;
+  background-color: green;
+  cursor: pointer;
+}
 
-    for (let i = 1; i <= 14; i++) {
-      const booking = takenSeats.get(i);
-      const isTaken = takenSeats.has(i);
-      container.appendChild(createSeat(i, isTaken));
+.opptatt {
+  background-color: red;
+  pointer-events: none;
+  opacity: 0.6;
+}
 
-      if (isTaken) {
-        const li = document.createElement("li");
-        li.textContent = `Plass ${i} – ${booking.navn} – ${booking.tidspunkt}`;
-        list.appendChild(li);
-      }
-    }
-  });
+#bookedList {
+  max-width: 250px;
+  text-align: left;
+}
+
+#bookedList ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+#popup {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+}
+
+.hidden {
+  display: none;
+}
