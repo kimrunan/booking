@@ -189,24 +189,38 @@
 
     fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSWeVLX-_EP_glVBrHjj4FtpaSe0jhZyv06OQPruEiso18V_pIEON82yHUX2S1WE1RckemMIOFx9a-a/pub?output=csv")
       .then(res => res.text())
-      .then(csv => {
-        const rows = csv.split("\n").slice(1);
-        const opptattPlasser = new Set();
+.then(csv => {
+  const lines = csv.trim().split("\n").slice(1);
+  const opptattPlasser = new Set();
+  const bookings = [];
 
-        rows.forEach(row => {
-          const [timestamp, plass, navn] = row.split(",");
-          if (plass && navn) {
-            bookedList.innerHTML += `<li>${plass.trim()}: ${navn.trim()}</li>`;
-            opptattPlasser.add(plass.trim());
-          }
-        });
+  lines.forEach(row => {
+    const columns = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+    if (columns && columns.length >= 3) {
+      const plass = columns[1].replace(/^"|"$/g, "").trim();
+      const navn = columns[2].replace(/^"|"$/g, "").trim();
+      if (plass && navn) {
+        bookings.push({ plass: plass, navn: navn });
+        opptattPlasser.add(plass);
+      }
+    }
+  });
 
-        document.querySelectorAll(".seat").forEach(btn => {
-          if (opptattPlasser.has(btn.getAttribute("data-plass"))) {
-            btn.classList.add("opptatt");
-          }
-        });
-      });
+  // Sorter etter plassnummer (numerisk)
+  bookings.sort((a, b) => parseInt(a.plass) - parseInt(b.plass));
+
+  // Vis booket liste
+  bookings.forEach(b => {
+    bookedList.innerHTML += `<li>${b.plass}: ${b.navn}</li>`;
+  });
+
+  // Marker opptatte plasser på kartet
+  document.querySelectorAll(".seat").forEach(btn => {
+    if (opptattPlasser.has(btn.getAttribute("data-plass"))) {
+      btn.classList.add("opptatt");
+    }
+  });
+});
   </script>
 </body>
 </html>
