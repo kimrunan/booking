@@ -4,28 +4,27 @@ body {
   margin: 20px;
 }
 
-h2 {
-  font-size: 24px;
-}
-
 #bookingWrapper {
   display: flex;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 40px;
   justify-content: center;
-  gap: 30px;
   margin-top: 20px;
 }
 
 #seats {
-  width: 100%;
-  max-width: 600px;
-  aspect-ratio: 2 / 1; /* holder proporsjon på bildet */
+  width: 600px;
+  height: 300px;
   position: relative;
-  background-image: url("background.png"); /* eller background.png */
+  background-image: url("background.png"); /* evt background.png */
   background-size: cover;
   background-position: center;
   border: 1px solid #ccc;
-  border-radius: 8px;
+}
+
+.background {
+  width: 100%;
+  display: block;
 }
 
 .seat {
@@ -60,7 +59,6 @@ h2 {
 
 #bookedList h3 {
   margin-bottom: 10px;
-  font-size: 18px;
 }
 
 #bookedList ul {
@@ -72,30 +70,4 @@ h2 {
 #bookedList li {
   margin: 6px 0;
   font-size: 14px;
-}
-
-@media (max-width: 768px) {
-  #bookingWrapper {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  #bookedList {
-    max-width: 90%;
-    text-align: center;
-  }
-
-  #bookedList li {
-    font-size: 16px;
-  }
-
-  h2 {
-    font-size: 20px;
-  }
-
-  .seat {
-    width: 36px;
-    height: 36px;
-    font-size: 16px;
-  }
 }
