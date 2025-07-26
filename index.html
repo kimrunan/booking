@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -8,14 +7,17 @@
 </head>
 <body>
   <h2>Velg en ledig plass</h2>
-  <div class="map-container">
-    <img src="background.png" alt="Plasskart" class="background">
-  <div id="bookedList">
-    <h3>🪑 Bookede plasser:</h3>
-    <ul id="bookedItems"></ul>
-  </div>
-    <!-- 14 plasser -->
-    <div id="seats"></div>
+
+  <div id="bookingWrapper">
+    <div id="seats">
+      <img src="background.png" alt="Plasskart" class="background">
+      <!-- Her plasseres de 14 setene av JavaScript -->
+    </div>
+
+    <div id="bookedList">
+      <h3>🪑 Bookede plasser:</h3>
+      <ul id="bookedItems"></ul>
+    </div>
   </div>
 
   <script src="script.js"></script>
