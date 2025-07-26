@@ -1,58 +1,73 @@
-
 body {
   font-family: sans-serif;
   text-align: center;
+  margin: 20px;
 }
-.map-container {
-  position: relative;
-  width: 800px;
-  margin: 0 auto;
-}
-.background {
-  width: 100%;
-}
-.seat {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  color: white;
-  font-weight: bold;
+
+#bookingWrapper {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  gap: 40px;
   justify-content: center;
-  cursor: pointer;
-  text-decoration: none;
+  margin-top: 20px;
 }
-.ledig {
-  background-color: green;
-}
-.opptatt {
-  background-color: red;
-  pointer-events: none;
-  opacity: 0.6;
-}
+
 #seats {
   width: 600px;
   height: 300px;
   position: relative;
-  background-image: url("background.jpg");
+  background-image: url("background.jpg"); /* evt background.png */
   background-size: cover;
-  float: left;
+  background-position: center;
+  border: 1px solid #ccc;
+}
+
+.background {
+  width: 100%;
+  display: block;
+}
+
+.seat {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-weight: bold;
+  color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ledig {
+  background-color: green;
+}
+
+.opptatt {
+  background-color: red;
+  pointer-events: none;
+  opacity: 0.7;
 }
 
 #bookedList {
-  float: left;
-  margin-left: 40px;
+  max-width: 300px;
+  text-align: left;
+}
+
+#bookedList h3 {
+  margin-bottom: 10px;
 }
 
 #bookedList ul {
   list-style: none;
   padding-left: 0;
+  margin: 0;
 }
 
 #bookedList li {
-  margin: 5px 0;
-  font-family: sans-serif;
+  margin: 6px 0;
   font-size: 14px;
 }
