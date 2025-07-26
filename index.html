@@ -1,40 +1,212 @@
+
 <!DOCTYPE html>
 <html lang="no">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Plassbooking</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f8f8;
+    }
+
+    h2 {
+      margin-top: 20px;
+    }
+
+    #bookingWrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      margin: 20px;
+    }
+
+    .map-container {
+      position: relative;
+      max-width: 90vw;
+      width: 100%;
+    }
+
+    .map-image {
+      width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+    }
+
+    .seat {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      color: white;
+      background-color: green;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .opptatt {
+      background-color: red;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    #bookedList {
+      background-color: white;
+      border: 1px solid #ddd;
+      padding: 10px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    #bookedList ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #bookedList li {
+      padding: 4px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    #popupForm {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      z-index: 999;
+    }
+
+    #popupForm input[type="text"] {
+      padding: 6px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    #popupForm button {
+      padding: 6px 12px;
+      margin-right: 10px;
+    }
+
+    @media (min-width: 768px) {
+      #bookingWrapper {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h2>Booking av plass</h2>
-
+  <h2>Velg en ledig plass</h2>
   <div id="bookingWrapper">
-    <div id="seats">
-      <img src="plasskart.png" alt="Plasskart">
-      <!-- Setene legges med JS -->
+    <div class="map-container">
+      <img src="plasskart.png" alt="Plasskart" class="map-image">
+      <div id="seats">
+        <div class="seat" style="top: 62%; left: 11%;" data-plass="1">1</div>
+        <div class="seat" style="top: 59%; left: 19%;" data-plass="2">2</div>
+        <div class="seat" style="top: 67%; left: 25%;" data-plass="3">3</div>
+        <div class="seat" style="top: 63%; left: 30%;" data-plass="4">4</div>
+        <div class="seat" style="top: 71%; left: 34%;" data-plass="5">5</div>
+        <div class="seat" style="top: 55%; left: 32%;" data-plass="6">6</div>
+        <div class="seat" style="top: 52%; left: 40%;" data-plass="7">7</div>
+        <div class="seat" style="top: 70%; left: 41%;" data-plass="8">8</div>
+        <div class="seat" style="top: 47%; left: 48%;" data-plass="9">9</div>
+        <div class="seat" style="top: 44%; left: 55%;" data-plass="10">10</div>
+        <div class="seat" style="top: 41%; left: 60%;" data-plass="11">11</div>
+        <div class="seat" style="top: 39%; left: 67%;" data-plass="12">12</div>
+      </div>
     </div>
 
     <div id="bookedList">
-      <h3>🪑 Opptatte plasser:</h3>
+      <h3>🪑 Bookede plasser:</h3>
       <ul id="bookedItems"></ul>
     </div>
   </div>
 
-  <!-- Popup-skjema -->
-  <div id="popup" class="hidden">
-    <div class="popup-content">
-      <h3>Book plass <span id="selectedSeat"></span></h3>
-      <form id="bookingForm">
-        <input type="hidden" id="seatNumber" name="seatNumber" />
-        <label for="name">Ditt navn:</label><br>
-        <input type="text" id="name" name="name" required><br><br>
-        <button type="submit">Send inn</button>
-        <button type="button" onclick="closePopup()">Avbryt</button>
-      </form>
-    </div>
+  <div id="popupForm">
+    <form id="bookingForm">
+      <input type="hidden" id="plassnummer" name="plassnummer">
+      <label for="navn">Navn:</label><br>
+      <input type="text" id="navn" name="navn" required><br>
+      <button type="submit">Book</button>
+      <button type="button" onclick="closeForm()">Avbryt</button>
+    </form>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const scriptURL = "DIN_APPS_SCRIPT_WEBAPP_URL";
+    const form = document.getElementById("bookingForm");
+    const popup = document.getElementById("popupForm");
+    const plassnummerInput = document.getElementById("plassnummer");
+    const navnInput = document.getElementById("navn");
+    const bookedList = document.getElementById("bookedItems");
+
+    function openForm(plassNr) {
+      plassnummerInput.value = plassNr;
+      navnInput.value = "";
+      popup.style.display = "block";
+    }
+
+    function closeForm() {
+      popup.style.display = "none";
+    }
+
+    document.querySelectorAll(".seat").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const nr = btn.getAttribute("data-plass");
+        openForm(nr);
+      });
+    });
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const data = new FormData(form);
+      data.append("timestamp", new Date().toISOString());
+
+      fetch(scriptURL, {
+        method: "POST",
+        body: data
+      }).then(() => {
+        alert("Plass booket!");
+        location.reload();
+      }).catch(err => alert("Feil: " + err.message));
+    });
+
+    fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vSWeVLX-_EP_glVBrHjj4FtpaSe0jhZyv06OQPruEiso18V_pIEON82yHUX2S1WE1RckemMIOFx9a-a/pub?output=csv")
+      .then(res => res.text())
+      .then(csv => {
+        const rows = csv.split("\n").slice(1);
+        const opptattPlasser = new Set();
+
+        rows.forEach(row => {
+          const [timestamp, plass, navn] = row.split(",");
+          if (plass && navn) {
+            bookedList.innerHTML += `<li>${plass.trim()}: ${navn.trim()}</li>`;
+            opptattPlasser.add(plass.trim());
+          }
+        });
+
+        document.querySelectorAll(".seat").forEach(btn => {
+          if (opptattPlasser.has(btn.getAttribute("data-plass"))) {
+            btn.classList.add("opptatt");
+          }
+        });
+      });
+  </script>
 </body>
 </html>
