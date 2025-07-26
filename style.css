@@ -21,7 +21,7 @@ h2 {
   max-width: 600px;
   aspect-ratio: 2 / 1; /* holder proporsjon på bildet */
   position: relative;
-  background-image: url("background.jpg"); /* eller background.png */
+  background-image: url("background.png"); /* eller background.png */
   background-size: cover;
   background-position: center;
   border: 1px solid #ccc;
