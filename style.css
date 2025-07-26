@@ -1,29 +1,27 @@
 body {
   font-family: sans-serif;
   text-align: center;
-  margin: 20px;
+  margin: 0;
+  padding: 0;
 }
 
 #bookingWrapper {
   display: flex;
-  align-items: flex-start;
-  gap: 40px;
+  flex-wrap: wrap;
   justify-content: center;
-  margin-top: 20px;
+  gap: 30px;
+  margin: 20px;
 }
 
 #seats {
-  width: 600px;
-  height: 400px;
   position: relative;
-  background-image: url("background.png"); /* evt background.png */
-  background-size: cover;
-  background-position: center;
-  border: 1px solid #ccc;
+  width: 100%;
+  max-width: 800px;
 }
 
-.background {
+#seats img {
   width: 100%;
+  height: auto;
   display: block;
 }
 
@@ -32,42 +30,47 @@ body {
   width: 32px;
   height: 32px;
   border-radius: 50%;
+  text-align: center;
+  line-height: 32px;
   font-weight: bold;
   color: white;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.ledig {
   background-color: green;
+  cursor: pointer;
 }
 
 .opptatt {
   background-color: red;
   pointer-events: none;
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 #bookedList {
-  max-width: 300px;
+  max-width: 250px;
   text-align: left;
-}
-
-#bookedList h3 {
-  margin-bottom: 10px;
 }
 
 #bookedList ul {
   list-style: none;
   padding-left: 0;
-  margin: 0;
 }
 
-#bookedList li {
-  margin: 6px 0;
-  font-size: 14px;
+#popup {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+}
+
+.hidden {
+  display: none;
 }
