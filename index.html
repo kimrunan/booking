@@ -199,17 +199,17 @@
     if (columns && columns.length >= 3) {
       const plass = columns[1].replace(/^"|"$/g, "").trim();
       const navn = columns[2].replace(/^"|"$/g, "").trim();
-      if (plass && navn) {
+      if (navn) {
         bookings.push({ plass: plass, navn: navn });
-        opptattPlasser.add(plass);
+        if (plass) opptattPlasser.add(plass);
       }
     }
   });
 
-  // Sorter etter plassnummer (numerisk)
+  // Sortér etter plassnummer (numerisk), uavhengig av gyldighet
   bookings.sort((a, b) => parseInt(a.plass) - parseInt(b.plass));
 
-  // Vis booket liste
+  // Vis alle navn som er sendt inn
   bookings.forEach(b => {
     bookedList.innerHTML += `<li>${b.plass}: ${b.navn}</li>`;
   });
@@ -221,6 +221,7 @@
     }
   });
 });
+
   </script>
 </body>
 </html>
