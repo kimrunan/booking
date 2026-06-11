@@ -154,6 +154,27 @@
       <button type="button" onclick="closeForm()">Avbryt</button>
     </form>
   </div>
+  <div id="bookingInfo" class="booking-info hidden">
+    <div class="booking-header">
+        <span id="bookingIcon">🚐</span>
+        <h3 id="bookingTitle">Plass 01</h3>
+    </div>
+
+    <div class="booking-status ledig" id="bookingStatus">
+        Ledig
+    </div>
+
+    <div id="bookingDetails" class="hidden">
+        <p><strong>Booket av:</strong></p>
+        <p id="bookingName">Ola Nordmann</p>
+
+        <p><strong>Fra:</strong></p>
+        <p id="bookingFrom">01.08.2026</p>
+
+        <p><strong>Til:</strong></p>
+        <p id="bookingTo">05.08.2026</p>
+    </div>
+</div>
 
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycbzlsArraMIZEb7vZcE8my5qiP2ViPG_paz4A6xVidtBoFv5GFONvwu4Um2mXQoaHfwfSA/exec";

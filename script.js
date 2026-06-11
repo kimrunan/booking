@@ -17,7 +17,20 @@ const booked = []; // Her vil du hente fra Google Sheet
 
 const container = document.getElementById("seats");
 const list = document.getElementById("bookedItems");
+const lock = LockService.getScriptLock();
 
+lock.waitLock(30000);
+
+try {
+
+   // sjekk om plass er ledig
+   // legg inn booking
+
+} finally {
+
+   lock.releaseLock();
+
+}
 seatData.forEach(seat => {
   const btn = document.createElement("div");
   btn.classList.add("seat");
@@ -41,6 +54,34 @@ function openPopup(seatId) {
 
 function closePopup() {
   document.getElementById("popup").classList.add("hidden");
+}
+
+function showBooking(data) {
+
+    document.getElementById("bookingIcon").textContent = data.icon;
+    document.getElementById("bookingTitle").textContent = data.name;
+
+    const status = document.getElementById("bookingStatus");
+    const details = document.getElementById("bookingDetails");
+
+    if(data.booked){
+
+        status.textContent = "Opptatt";
+        status.className = "booking-status opptatt";
+
+        details.classList.remove("hidden");
+
+        document.getElementById("bookingName").textContent = data.customer;
+        document.getElementById("bookingFrom").textContent = data.from;
+        document.getElementById("bookingTo").textContent = data.to;
+
+    } else {
+
+        status.textContent = "Ledig";
+        status.className = "booking-status ledig";
+
+        details.classList.add("hidden");
+    }
 }
 
 // Fyll inn din Web App URL fra Apps Script her:
